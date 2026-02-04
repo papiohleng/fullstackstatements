@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attachments - Mabon Suites Hotel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #C9A227;
+            --primary-gold-light: #E8D48A;
+            --primary-gold-dark: #9A7B1A;
+            --secondary-navy: #1A1F3D;
+            --secondary-navy-light: #2A3158;
+            --accent-cream: #F5F0E6;
+            --accent-white: #FFFFFF;
+            --text-dark: #1A1A1A;
+            --text-muted: #6B7280;
+            --border-light: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--accent-cream) 0%, #fff 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--secondary-navy);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-brand i {
+            font-size: 1.5rem;
+            color: var(--primary-gold);
+        }
+
+        .navbar-brand span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-white);
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--accent-white);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-gold);
+            color: var(--secondary-navy);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--secondary-navy);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title i {
+            color: var(--primary-gold);
+        }
+
+        /* Search and Filter */
+        .controls-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            min-width: 150px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gold);
+            color: var(--secondary-navy);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-gold-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-gold);
+            color: var(--primary-gold);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-gold);
+            color: var(--secondary-navy);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.images { background: rgba(59, 130, 246, 0.1); color: var(--info); }
+        .stat-icon.documents { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .stat-icon.total { background: rgba(201, 162, 39, 0.1); color: var(--primary-gold); }
+        .stat-icon.storage { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
+
+        .stat-info h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--secondary-navy);
+        }
+
+        .stat-info p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Attachments Grid */
+        .attachments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .attachment-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+
+        .attachment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .attachment-preview {
+            height: 180px;
+            background: var(--accent-cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .attachment-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .attachment-preview .file-icon {
+            font-size: 4rem;
+            color: var(--text-muted);
+        }
+
+        .attachment-preview .file-icon.pdf { color: #EF4444; }
+        .attachment-preview .file-icon.doc { color: #3B82F6; }
+        .attachment-preview .file-icon.xls { color: #10B981; }
+        .attachment-preview .file-icon.image { color: #8B5CF6; }
+
+        .attachment-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(26, 31, 61, 0.8);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .attachment-details {
+            padding: 1rem;
+        }
+
+        .attachment-name {
+            font-weight: 600;
+            color: var(--secondary-navy);
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .attachment-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .attachment-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .attachment-actions .btn {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            justify-content: center;
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-light);
+            border-top-color: var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--border-light);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--secondary-navy);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow: auto;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--secondary-navy);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-body img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .navbar-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .page-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .controls-bar {
+                flex-direction: column;
+            }
+
+            .attachments-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-hotel"></i>
+            <span>Mabon Suites Hotel</span>
+        </div>
+        <ul class="navbar-nav">
+            <li><a href="?action=form" class="nav-link"><i class="fas fa-calendar-plus"></i> New Booking</a></li>
+            <li><a href="?action=admin" class="nav-link"><i class="fas fa-list"></i> Bookings</a></li>
+            <li><a href="?action=attachments" class="nav-link active"><i class="fas fa-paperclip"></i> Attachments</a></li>
+            <li><a href="?action=deleted" class="nav-link"><i class="fas fa-trash"></i> Deleted</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-paperclip"></i>
+                Guest Attachments
+            </h1>
+            <button class="btn btn-primary" onclick="refreshAttachments()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon images">
+                    <i class="fas fa-image"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="imageCount">0</h3>
+                    <p>Images</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon documents">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="documentCount">0</h3>
+                    <p>Documents</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalCount">0</h3>
+                    <p>Total Files</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon storage">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="storageUsed">0 MB</h3>
+                    <p>Storage Used</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Bar -->
+        <div class="controls-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search attachments..." onkeyup="filterAttachments()">
+            </div>
+            <select class="filter-select" id="typeFilter" onchange="filterAttachments()">
+                <option value="">All Types</option>
+                <option value="image">Images</option>
+                <option value="pdf">PDF</option>
+                <option value="document">Documents</option>
+            </select>
+            <select class="filter-select" id="sortFilter" onchange="sortAttachments()">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="name">By Name</option>
+                <option value="size">By Size</option>
+            </select>
+        </div>
+
+        <!-- Attachments Grid -->
+        <div id="attachmentsContainer">
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p>Loading attachments...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="previewTitle">File Preview</h3>
+                <button class="modal-close" onclick="closePreviewModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="previewContent">
+                <!-- Preview content will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closePreviewModal()">Close</button>
+                <a id="downloadLink" class="btn btn-primary" href="#" target="_blank">
+                    <i class="fas fa-download"></i> Download
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        let allAttachments = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAttachments();
+        });
+
+        // Load Attachments
+        function loadAttachments() {
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    if (result && result.success !== false) {
+                        allAttachments = result.attachments || [];
+                        displayAttachments(allAttachments);
+                        // Update stats from server response
+                        if (result.stats) {
+                            document.getElementById('imageCount').textContent = result.stats.images || 0;
+                            document.getElementById('documentCount').textContent = result.stats.documents || 0;
+                            document.getElementById('totalCount').textContent = result.stats.total || 0;
+                            document.getElementById('storageUsed').textContent = result.stats.storage || '0 MB';
+                        } else {
+                            updateStats(allAttachments);
+                        }
+                    } else {
+                        showToast('Error loading attachments: ' + (result.error || 'Unknown'), 'error');
+                        displayEmptyState();
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showToast('Failed to load attachments: ' + error.message, 'error');
+                    displayEmptyState();
+                })
+                .getAllAttachments();
+        }
+
+        // Display Attachments
+        function displayAttachments(attachments) {
+            const container = document.getElementById('attachmentsContainer');
+            
+            if (!attachments || attachments.length === 0) {
+                displayEmptyState();
+                return;
+            }
+
+            let html = '<div class="attachments-grid">';
+            
+            attachments.forEach(function(file) {
+                // Use fileType from server or derive from fileName
+                const fileType = file.fileType || getFileType(file.fileName || file.name);
+                const iconClass = getFileIcon(fileType);
+                const isImage = fileType === 'image';
+                const fileName = file.fileName || file.name || 'Unknown';
+                const fileUrl = file.url || '#';
+                const fileId = file.id || '';
+                const uploadedAt = file.uploadedAt || file.dateCreated || '';
+                const reference = file.reference || '';
+                const docType = file.type || 'Document';
+                
+                html += `
+                    <div class="attachment-card" data-type="${fileType}" data-name="${fileName}" data-date="${uploadedAt}">
+                        <div class="attachment-preview">
+                            ${isImage ? 
+                                `<img src="${fileUrl}" alt="${fileName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                 <i class="file-icon image fas fa-image" style="display:none;"></i>` : 
+                                `<i class="file-icon ${fileType} ${iconClass}"></i>`
+                            }
+                            <span class="attachment-type-badge">${docType}</span>
+                        </div>
+                        <div class="attachment-details">
+                            <div class="attachment-name" title="${fileName}">${fileName}</div>
+                            <div class="attachment-meta">
+                                <span style="color:var(--primary-gold)">${reference}</span>
+                                <span>${formatDate(uploadedAt)}</span>
+                            </div>
+                            <div class="attachment-actions">
+                                <button class="btn btn-outline" onclick="previewFile('${fileId}', '${escapeHtml(fileName)}', '${fileType}', '${fileUrl}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <a class="btn btn-primary" href="${fileUrl}" target="_blank">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                <button class="btn btn-danger" onclick="deleteFile('${fileId}', '${escapeHtml(fileName)}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Display Empty State
+        function displayEmptyState() {
+            const container = document.getElementById('attachmentsContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>No Attachments Found</h3>
+                    <p>Guest ID documents will appear here when uploaded.</p>
+                </div>
+            `;
+        }
+
+        // Update Stats
+        function updateStats(attachments) {
+            let imageCount = 0;
+            let documentCount = 0;
+            let totalSize = 0;
+
+            attachments.forEach(function(file) {
+                const fileType = getFileType(file.mimeType || file.name);
+                if (fileType === 'image') {
+                    imageCount++;
+                } else {
+                    documentCount++;
+                }
+                totalSize += file.size || 0;
+            });
+
+            document.getElementById('imageCount').textContent = imageCount;
+            document.getElementById('documentCount').textContent = documentCount;
+            document.getElementById('totalCount').textContent = attachments.length;
+            document.getElementById('storageUsed').textContent = formatFileSize(totalSize);
+        }
+
+        // Filter Attachments
+        function filterAttachments() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+
+            const filtered = allAttachments.filter(function(file) {
+                const fileName = (file.fileName || file.name || '').toLowerCase();
+                const reference = (file.reference || '').toLowerCase();
+                const matchesSearch = fileName.includes(searchTerm) || reference.includes(searchTerm);
+                const fileType = file.fileType || getFileType(fileName);
+                const matchesType = !typeFilter || fileType === typeFilter || 
+                    (typeFilter === 'document' && fileType !== 'image' && fileType !== 'pdf');
+                
+                return matchesSearch && matchesType;
+            });
+
+            displayAttachments(filtered);
+        }
+
+        // Sort Attachments
+        function sortAttachments() {
+            const sortBy = document.getElementById('sortFilter').value;
+            
+            const sorted = [...allAttachments].sort(function(a, b) {
+                switch(sortBy) {
+                    case 'newest':
+                        return new Date(b.uploadedAt || b.dateCreated) - new Date(a.uploadedAt || a.dateCreated);
+                    case 'oldest':
+                        return new Date(a.uploadedAt || a.dateCreated) - new Date(b.uploadedAt || b.dateCreated);
+                    case 'name':
+                        return (a.fileName || a.name || '').localeCompare(b.fileName || b.name || '');
+                    case 'size':
+                        return (b.size || 0) - (a.size || 0);
+                    default:
+                        return 0;
+                }
+            });
+
+            displayAttachments(sorted);
+        }
+
+        // Preview File
+        function previewFile(fileId, fileName, fileType, fileUrl) {
+            document.getElementById('previewTitle').textContent = fileName;
+            document.getElementById('downloadLink').href = fileUrl;
+            
+            const previewContent = document.getElementById('previewContent');
+            
+            if (fileType === 'image') {
+                previewContent.innerHTML = `<img src="${fileUrl}" alt="${fileName}">`;
+            } else if (fileType === 'pdf') {
+                previewContent.innerHTML = `<iframe src="${fileUrl}" style="width:100%; height:500px; border:none;"></iframe>`;
+            } else {
+                previewContent.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-file-alt" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <p>Preview not available for this file type.</p>
+                        <p>Click download to view the file.</p>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('previewModal').classList.add('active');
+        }
+
+        // Close Preview Modal
+        function closePreviewModal() {
+            document.getElementById('previewModal').classList.remove('active');
+        }
+
+        // Delete File
+        function deleteFile(fileId, fileName) {
+            if (confirm(`Are you sure you want to delete "${fileName}"?`)) {
+                google.script.run
+                    .withSuccessHandler(function(result) {
+                        if (result.success) {
+                            showToast('File deleted successfully', 'success');
+                            loadAttachments();
+                        } else {
+                            showToast('Failed to delete file', 'error');
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        showToast('Error deleting file', 'error');
+                    })
+                    .deleteAttachment(fileId);
+            }
+        }
+
+        // Refresh Attachments
+        function refreshAttachments() {
+            document.getElementById('attachmentsContainer').innerHTML = `
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <p>Loading attachments...</p>
+                </div>
+            `;
+            loadAttachments();
+        }
+
+        // Utility Functions
+        function getFileType(mimeTypeOrName) {
+            const str = (mimeTypeOrName || '').toLowerCase();
+            if (str.includes('image') || str.match(/\.(jpg|jpeg|png|gif|webp|bmp)$/i)) {
+                return 'image';
+            } else if (str.includes('pdf') || str.match(/\.pdf$/i)) {
+                return 'pdf';
+            } else if (str.includes('word') || str.match(/\.(doc|docx)$/i)) {
+                return 'doc';
+            } else if (str.includes('excel') || str.includes('spreadsheet') || str.match(/\.(xls|xlsx)$/i)) {
+                return 'xls';
+            }
+            return 'document';
+        }
+
+        function getFileIcon(fileType) {
+            const icons = {
+                'image': 'fas fa-image',
+                'pdf': 'fas fa-file-pdf',
+                'doc': 'fas fa-file-word',
+                'xls': 'fas fa-file-excel',
+                'document': 'fas fa-file-alt'
+            };
+            return icons[fileType] || icons['document'];
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes || bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
+        // Toast Notification
+        function showToast(message, type) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                'success': 'fas fa-check-circle',
+                'error': 'fas fa-exclamation-circle',
+                'warning': 'fas fa-exclamation-triangle'
+            };
+            
+            toast.innerHTML = `<i class="${icons[type] || icons['success']}"></i> ${message}`;
+            container.appendChild(toast);
+            
+            setTimeout(function() {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(function() {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('previewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePreviewModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePreviewModal();
+            }
+        });
+    </script>
+</body>
+</html>

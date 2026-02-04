@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancelled Bookings - Mabon Suites</title>
+  <base target="_top">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --primary: #c9a962;
+      --primary-dark: #a88a4a;
+      --secondary: #1f1f1f;
+      --bg: #0a0a0a;
+      --bg-card: #141414;
+      --bg-input: #1a1a1a;
+      --text: #faf9f6;
+      --text-muted: #a3a3a3;
+      --border: #2a2a2a;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --info: #3b82f6;
+    }
+    
+    [data-theme="light"] {
+      --bg: #faf9f6;
+      --bg-card: #ffffff;
+      --bg-input: #f5f3ef;
+      --text: #1a1a1a;
+      --text-muted: #6b6b6b;
+      --border: #e0dcd4;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #5c1010, #7f1d1d);
+      border-bottom: 1px solid var(--error);
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .header-actions { display: flex; gap: 12px; align-items: center; }
+    
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    
+    .btn-back {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .btn-back:hover { background: rgba(255,255,255,0.2); }
+    
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { opacity: 0.9; transform: translateY(-1px); }
+    
+    .btn-danger { background: var(--error); color: white; }
+    .btn-danger:hover { opacity: 0.9; }
+    
+    .theme-toggle {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px;
+      display: flex;
+      cursor: pointer;
+    }
+    
+    .theme-toggle span {
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      color: white;
+      transition: all 0.2s;
+    }
+    
+    .theme-toggle span.active { background: rgba(255,255,255,0.2); }
+    
+    /* Stats */
+    .stats-bar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+    
+    .stat { text-align: center; }
+    .stat-value { font-size: 28px; font-weight: 700; color: var(--error); }
+    .stat-label { font-size: 12px; color: var(--text-muted); }
+    
+    /* Search */
+    .search-bar {
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .search-box {
+      position: relative;
+      max-width: 400px;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+    }
+    
+    .search-box input:focus { outline: none; border-color: var(--error); }
+    
+    .search-box svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+    }
+    
+    /* Table */
+    .table-container { padding: 24px; overflow-x: auto; }
+    
+    table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+    
+    th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    
+    th {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    
+    tr:hover { background: rgba(239,68,68,0.03); }
+    
+    .reference { color: var(--error); font-family: monospace; font-weight: 600; }
+    
+    .deleted-info {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+    
+    .deleted-info strong { color: var(--error); }
+    
+    .reason-text {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    
+    .amount { font-weight: 600; color: var(--primary); }
+    
+    .actions { display: flex; gap: 8px; }
+    
+    .action-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      background: transparent;
+      color: var(--text);
+    }
+    
+    .action-btn:hover { border-color: var(--primary); }
+    .action-btn.restore { color: var(--success); border-color: var(--success); }
+    .action-btn.restore:hover { background: rgba(16,185,129,0.1); }
+    .action-btn.permanent { color: var(--error); border-color: var(--error); }
+    .action-btn.permanent:hover { background: rgba(239,68,68,0.1); }
+    
+    .action-btn svg { width: 14px; height: 14px; }
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 20px;
+    }
+    
+    .page-btn {
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .page-btn:hover:not(:disabled) { border-color: var(--error); }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    
+    .page-info { color: var(--text-muted); font-size: 14px; margin: 0 16px; }
+    
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+    
+    .modal-overlay.show { display: flex; }
+    
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      overflow: hidden;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .modal-header h2 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--error); }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 28px;
+      line-height: 1;
+    }
+    
+    .modal-body { padding: 24px; overflow-y: auto; }
+    
+    .detail-row { display: flex; margin-bottom: 12px; }
+    .detail-label { width: 140px; font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
+    .detail-value { flex: 1; color: var(--text); }
+    
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .modal-actions .btn { flex: 1; justify-content: center; }
+    
+    /* Confirm Modal */
+    .confirm-modal .modal-body { text-align: center; padding: 40px; }
+    
+    .confirm-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      background: rgba(239,68,68,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .confirm-icon svg { width: 32px; height: 32px; stroke: var(--error); }
+    
+    .confirm-title { font-size: 20px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+    .confirm-text { color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+    
+    .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+    
+    /* Loading & Empty */
+    .loading { text-align: center; padding: 60px; color: var(--text-muted); }
+    .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--error); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .empty { text-align: center; padding: 80px 24px; color: var(--text-muted); }
+    .empty svg { width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.3; stroke: var(--error); }
+    .empty h3 { font-size: 20px; margin-bottom: 8px; color: var(--text); }
+    
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .toast {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 20px;
+      animation: slideIn 0.3s ease;
+      max-width: 360px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.error { border-left: 4px solid var(--error); }
+    
+    @media (max-width: 768px) {
+      .header { padding: 16px; }
+      .table-container { padding: 16px; }
+      table { min-width: 800px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      Cancelled Bookings
+    </h1>
+    <div class="header-actions">
+      <a href="?action=admin" class="btn btn-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to Dashboard
+      </a>
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span id="darkMode" class="active">Dark</span>
+        <span id="lightMode">Light</span>
+      </div>
+    </div>
+  </header>
+  
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-value" id="totalDeleted">0</div>
+      <div class="stat-label">Total Cancelled</div>
+    </div>
+  </div>
+  
+  <div class="search-bar">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search cancelled bookings...">
+    </div>
+  </div>
+  
+  <div class="table-container">
+    <div id="loading" class="loading"><div class="spinner"></div><p>Loading cancelled bookings...</p></div>
+    <div id="empty" class="empty" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+      <h3>No Cancelled Bookings</h3>
+      <p>Cancelled bookings will appear here for review and restoration.</p>
+    </div>
+    <table id="dataTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Guest</th>
+          <th>Room</th>
+          <th>Amount</th>
+          <th>Cancelled</th>
+          <th>Reason</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+  
+  <div class="pagination">
+    <button class="page-btn" id="prevBtn" onclick="prevPage()">Previous</button>
+    <span class="page-info" id="pageInfo">Page 1 of 1</span>
+    <button class="page-btn" id="nextBtn" onclick="nextPage()">Next</button>
+  </div>
+  
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Cancelled Booking Details</h2>
+        <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="detailContent"></div>
+    </div>
+  </div>
+  
+  <!-- Confirm Permanent Delete Modal -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal confirm-modal" style="max-width:450px;">
+      <div class="modal-body">
+        <div class="confirm-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h3 class="confirm-title">Permanently Delete?</h3>
+        <p class="confirm-text">This action cannot be undone. The booking <strong id="confirmRef"></strong> will be permanently removed.</p>
+        <div class="confirm-actions">
+          <button class="btn btn-back" onclick="closeModal('confirmModal')">Cancel</button>
+          <button class="btn btn-danger" onclick="confirmPermanentDelete()">Delete Forever</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="toast-container" id="toastContainer"></div>
+  
+  <script>
+    let allData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    let pendingDeleteRef = null;
+    const perPage = 15;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      document.getElementById('searchInput').addEventListener('input', () => { currentPage = 1; filterData(); });
+    });
+    
+    function loadData() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('dataTable').style.display = 'none';
+      document.getElementById('empty').style.display = 'none';
+      
+      google.script.run
+        .withSuccessHandler(handleDataLoad)
+        .withFailureHandler(function(e) { 
+          toast('Failed to load: ' + e.message, 'error'); 
+          document.getElementById('loading').style.display = 'none'; 
+        })
+        .getDeletedBookings();
+    }
+    
+    function handleDataLoad(result) {
+      document.getElementById('loading').style.display = 'none';
+      allData = result.deleted || [];
+      document.getElementById('totalDeleted').textContent = allData.length;
+      filterData();
+    }
+    
+    function filterData() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      
+      filteredData = allData.filter(b => {
+        return !search || 
+          (b.guestName || '').toLowerCase().includes(search) ||
+          (b.email || '').toLowerCase().includes(search) ||
+          (b.reference || '').toLowerCase().includes(search) ||
+          (b.deleteReason || '').toLowerCase().includes(search);
+      });
+      
+      renderTable();
+    }
+    
+    function renderTable() {
+      const start = (currentPage - 1) * perPage;
+      const end = start + perPage;
+      const pageData = filteredData.slice(start, end);
+      const totalPages = Math.ceil(filteredData.length / perPage) || 1;
+      
+      if (filteredData.length === 0) {
+        document.getElementById('dataTable').style.display = 'none';
+        document.getElementById('empty').style.display = 'block';
+      } else {
+        document.getElementById('dataTable').style.display = 'table';
+        document.getElementById('empty').style.display = 'none';
+      }
+      
+      document.getElementById('tableBody').innerHTML = pageData.map(b => {
+        const safeRef = escapeJsString(b.reference);
+        return `
+        <tr>
+          <td><span class="reference">${escapeHtml(b.reference)}</span></td>
+          <td>
+            <strong>${escapeHtml(b.guestName || 'N/A')}</strong><br>
+            <small style="color:var(--text-muted)">${escapeHtml(b.email || '')}</small>
+          </td>
+          <td>${escapeHtml(b.roomName || 'N/A')}</td>
+          <td class="amount">R ${(b.totalAmount || 0).toLocaleString()}</td>
+          <td>
+            <div class="deleted-info">
+              <strong>${formatDate(b.deletedAt)}</strong><br>
+              <small>by ${escapeHtml(b.deletedBy || 'Admin')}</small>
+            </div>
+          </td>
+          <td><span class="reason-text" title="${escapeHtml(b.deleteReason)}">${escapeHtml(b.deleteReason || 'N/A')}</span></td>
+          <td class="actions">
+            <button class="action-btn" onclick="viewDetails('${safeRef}')" title="View Details">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <button class="action-btn restore" onclick="restoreBooking('${safeRef}')" title="Restore">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.36-3.36L23 10M1 14l5.13 4.36A9 9 0 0020.49 15"/></svg>
+              Restore
+            </button>
+            <button class="action-btn permanent" onclick="openConfirmModal('${safeRef}')" title="Delete Permanently">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </button>
+          </td>
+        </tr>
+        `;
+      }).join('');
+      
+      document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById('prevBtn').disabled = currentPage === 1;
+      document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+    }
+    
+    function viewDetails(reference) {
+      const booking = allData.find(b => b.reference === reference);
+      if (!booking) return;
+      
+      let snapshot = {};
+      try { snapshot = JSON.parse(booking.snapshot || '[]'); } catch(e) {}
+      
+      const content = `
+        <div class="detail-row"><div class="detail-label">Reference</div><div class="detail-value" style="color:var(--error);font-family:monospace;font-weight:600">${escapeHtml(booking.reference)}</div></div>
+        <div class="detail-row"><div class="detail-label">Guest Name</div><div class="detail-value">${escapeHtml(booking.guestName || 'N/A')}</div></div>
+        <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${escapeHtml(booking.email || 'N/A')}</div></div>
+        <div class="detail-row"><div class="detail-label">Room</div><div class="detail-value">${escapeHtml(booking.roomName || 'N/A')}</div></div>
+        <div class="detail-row"><div class="detail-label">Check-in</div><div class="detail-value">${formatDate(booking.checkInDate)}</div></div>
+        <div class="detail-row"><div class="detail-label">Check-out</div><div class="detail-value">${formatDate(booking.checkOutDate)}</div></div>
+        <div class="detail-row"><div class="detail-label">Total Amount</div><div class="detail-value" style="font-weight:600;color:var(--primary)">R ${(booking.totalAmount || 0).toLocaleString()}</div></div>
+        <div class="detail-row"><div class="detail-label">Cancelled At</div><div class="detail-value">${formatDateTime(booking.deletedAt)}</div></div>
+        <div class="detail-row"><div class="detail-label">Cancelled By</div><div class="detail-value">${escapeHtml(booking.deletedBy || 'Admin')}</div></div>
+        <div class="detail-row"><div class="detail-label">Reason</div><div class="detail-value">${escapeHtml(booking.deleteReason || 'N/A')}</div></div>
+        
+        <div class="modal-actions">
+          <button class="btn btn-success" onclick="restoreBooking('${escapeJsString(booking.reference)}'); closeModal('detailModal');">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.36-3.36L23 10M1 14l5.13 4.36A9 9 0 0020.49 15"/></svg>
+            Restore Booking
+          </button>
+          <button class="btn btn-danger" onclick="openConfirmModal('${escapeJsString(booking.reference)}'); closeModal('detailModal');">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            Delete Permanently
+          </button>
+        </div>
+      `;
+      
+      document.getElementById('detailContent').innerHTML = content;
+      openModal('detailModal');
+    }
+    
+    function restoreBooking(reference) {
+      google.script.run
+        .withSuccessHandler(() => {
+          toast('Booking restored successfully', 'success');
+          loadData();
+        })
+        .withFailureHandler(e => toast('Failed to restore: ' + e.message, 'error'))
+        .restoreBooking(reference);
+    }
+    
+    function openConfirmModal(reference) {
+      pendingDeleteRef = reference;
+      document.getElementById('confirmRef').textContent = reference;
+      openModal('confirmModal');
+    }
+    
+    function confirmPermanentDelete() {
+      if (!pendingDeleteRef) return;
+      
+      google.script.run
+        .withSuccessHandler(() => {
+          toast('Booking permanently deleted', 'success');
+          closeModal('confirmModal');
+          loadData();
+        })
+        .withFailureHandler(e => toast('Failed to delete: ' + e.message, 'error'))
+        .permanentDeleteBooking(pendingDeleteRef);
+    }
+    
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+    
+    function prevPage() { if (currentPage > 1) { currentPage--; renderTable(); } }
+    function nextPage() { const totalPages = Math.ceil(filteredData.length / perPage); if (currentPage < totalPages) { currentPage++; renderTable(); } }
+    
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const newTheme = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      document.getElementById('darkMode').classList.toggle('active', newTheme === 'dark');
+      document.getElementById('lightMode').classList.toggle('active', newTheme === 'light');
+      localStorage.setItem('theme', newTheme);
+    }
+    
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.getElementById('darkMode').classList.toggle('active', savedTheme === 'dark');
+    document.getElementById('lightMode').classList.toggle('active', savedTheme === 'light');
+    
+    function toast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 5000);
+    }
+    
+    function formatDate(dateStr) {
+      if (!dateStr) return 'N/A';
+      try {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      } catch(e) { return dateStr; }
+    }
+    
+    function formatDateTime(dateStr) {
+      if (!dateStr) return 'N/A';
+      try {
+        const date = new Date(dateStr);
+        return date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      } catch(e) { return dateStr; }
+    }
+    
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    
+    function escapeJsString(str) {
+      if (!str) return '';
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+  </script>
+</body>
+</html>

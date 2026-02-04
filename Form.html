@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Stay | MABON SUITES - Luxury Hotel Johannesburg</title>
+    <meta name="description" content="Secure online booking for MABON SUITES Johannesburg. Book your luxury suite with visa support, special requests, and best rates guaranteed.">
+    <base target="_top">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --background: #0a0a0a;
+            --foreground: #faf9f6;
+            --card: #141414;
+            --card-foreground: #faf9f6;
+            --primary: #c9a962;
+            --primary-dark: #a88a4a;
+            --secondary: #1f1f1f;
+            --muted: #1a1a1a;
+            --muted-foreground: #a3a3a3;
+            --border: #2a2a2a;
+            --input: #1f1f1f;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        [data-theme="light"] {
+            --background: #faf9f6;
+            --foreground: #1a1a1a;
+            --card: #ffffff;
+            --card-foreground: #1a1a1a;
+            --primary: #a88a4a;
+            --primary-dark: #8b7340;
+            --secondary: #f0ece4;
+            --muted: #f5f3ef;
+            --muted-foreground: #6b6b6b;
+            --border: #e0dcd4;
+            --input: #f5f3ef;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--foreground);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--background); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        /* Starfield Canvas */
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Header */
+        .header {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 1rem; }
+
+        .logo-main {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 3px;
+        }
+
+        .logo-sub {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .subtitle {
+            color: var(--muted-foreground);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .gold-line {
+            width: 60px;
+            height: 2px;
+            background: var(--primary);
+            margin: 1rem auto 0;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+        }
+
+        .toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--foreground);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: var(--primary);
+            color: var(--background);
+            border-color: var(--primary);
+        }
+
+        .toggle-btn svg { width: 20px; height: 20px; }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Booking Summary Sidebar */
+        .booking-summary {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+            order: 2;
+        }
+
+        .summary-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-label {
+            display: block;
+            color: var(--muted-foreground);
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--foreground);
+        }
+
+        .stay-duration {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .duration-display {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--background);
+        }
+
+        .duration-label {
+            text-align: center;
+            color: var(--background);
+            opacity: 0.9;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .price-breakdown {
+            background: var(--secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--muted-foreground);
+        }
+
+        .price-row.total {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        /* Booking Form */
+        .booking-form-section {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            order: 1;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title svg { width: 24px; height: 24px; color: var(--primary); }
+
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--foreground);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--foreground);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.1);
+        }
+
+        .form-input::placeholder { color: var(--muted-foreground); }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Room Selection - Using Native Select for Reliability */
+        .room-select-wrapper {
+            position: relative;
+        }
+
+        .room-select {
+            width: 100%;
+            padding: 1rem;
+            background: var(--input);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--foreground);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .room-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.1);
+        }
+
+        .room-select option {
+            padding: 1rem;
+            background: var(--card);
+            color: var(--foreground);
+        }
+
+        .room-select-arrow {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--primary);
+        }
+
+        /* Room Info Display */
+        .room-info-card {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: rgba(201, 169, 98, 0.08);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .room-info-card.visible {
+            display: block;
+        }
+
+        .room-info-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .room-info-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .room-info-feature {
+            background: var(--background);
+            color: var(--muted-foreground);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .room-info-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .room-info-price span {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            color: var(--muted-foreground);
+            font-weight: 400;
+        }
+
+        /* Visa Upload Section */
+        .visa-section {
+            background: rgba(201, 169, 98, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(201, 169, 98, 0.05);
+        }
+
+        .upload-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: rgba(201, 169, 98, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .upload-text { color: var(--foreground); margin-bottom: 0.5rem; font-weight: 500; }
+        .upload-hint { font-size: 0.8rem; color: var(--muted-foreground); }
+
+        .uploaded-files { margin-top: 1rem; }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--secondary);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .file-info { display: flex; align-items: center; gap: 0.75rem; }
+        .file-icon { color: var(--primary); }
+
+        .remove-file {
+            background: none;
+            border: none;
+            color: var(--muted-foreground);
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: color 0.3s ease;
+        }
+
+        .remove-file:hover { color: var(--error); }
+
+        /* Special Requests */
+        .requests-section { margin: 2rem 0; }
+
+        .request-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .request-checkbox {
+            display: none;
+        }
+
+        .request-option {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .request-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .request-checkbox:checked + .request-option {
+            border-color: var(--primary);
+            background: rgba(201, 169, 98, 0.1);
+        }
+
+        .request-icon { width: 20px; height: 20px; color: var(--primary); }
+
+        /* Submit Button */
+        .submit-section { margin-top: 3rem; text-align: center; }
+
+        .submit-btn {
+            background: var(--primary);
+            color: var(--background);
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(201, 169, 98, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .guarantee {
+            margin-top: 1rem;
+            color: var(--muted-foreground);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .guarantee svg { color: var(--primary); }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 30px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .success-message.show { display: block; }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-icon svg { width: 40px; height: 40px; stroke: var(--success); }
+
+        .success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .success-ref {
+            background: rgba(201, 169, 98, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 16px 24px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .success-ref-label { font-size: 0.8rem; color: var(--muted-foreground); margin-bottom: 4px; }
+        .success-ref-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); letter-spacing: 2px; }
+
+        .success-text { color: var(--muted-foreground); max-width: 500px; margin: 0 auto; }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .loading-overlay.show { display: flex; }
+
+        .loading-content { text-align: center; color: var(--foreground); }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 20px;
+            animation: slideIn 0.3s ease;
+            max-width: 360px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--error); }
+        .toast.info { border-left: 4px solid var(--primary); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .booking-summary {
+                position: static;
+                order: 1;
+            }
+            
+            .booking-form-section { order: 2; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem 3rem; }
+            .header { padding: 1.5rem 1rem; }
+            .date-inputs { grid-template-columns: 1fr; }
+            .request-options { grid-template-columns: 1fr; }
+            .theme-toggle { top: 1rem; right: 1rem; }
+            .logo-main { font-size: 2rem; }
+        }
+
+        /* Animations */
+        .animate-in { animation: fadeInUp 0.6s ease-out; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button class="toggle-btn" id="themeToggle" aria-label="Toggle theme">
+            <svg id="sunIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg id="moonIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header animate-in">
+        <div class="logo">
+            <div class="logo-main">MABON SUITES</div>
+            <div class="logo-sub">Luxury Hotel Johannesburg</div>
+        </div>
+        <p class="subtitle">Complete Your Luxury Stay Booking</p>
+        <div class="gold-line"></div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Booking Summary -->
+        <aside class="booking-summary animate-in" id="bookingSummary">
+            <h2 class="summary-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/>
+                </svg>
+                Booking Summary
+            </h2>
+            
+            <div class="summary-item">
+                <span class="summary-label">Check-in Date</span>
+                <div class="summary-value" id="checkInDisplay">-- / -- / ----</div>
+            </div>
+            
+            <div class="summary-item">
+                <span class="summary-label">Check-out Date</span>
+                <div class="summary-value" id="checkOutDisplay">-- / -- / ----</div>
+                <div style="margin-top:0.5rem;font-size:0.8rem;color:var(--muted-foreground);padding:0.5rem;background:var(--secondary);border-radius:4px;border-left:3px solid var(--primary);">Check-out time: 10:00 AM</div>
+            </div>
+            
+            <div class="summary-item">
+                <span class="summary-label">Selected Room</span>
+                <div class="summary-value" id="selectedRoomDisplay">Not Selected</div>
+                <div id="roomFeaturesDisplay"></div>
+            </div>
+            
+            <div class="stay-duration">
+                <div class="duration-display" id="durationDisplay">0 Nights</div>
+                <div class="duration-label">Total Stay Duration</div>
+            </div>
+            
+            <div class="price-breakdown">
+                <div class="price-row">
+                    <span>Room Rate (per night)</span>
+                    <span id="roomRate">R 0</span>
+                </div>
+                <div class="price-row">
+                    <span>Number of Nights</span>
+                    <span id="nightsCount">0</span>
+                </div>
+                <div class="price-row">
+                    <span>Room Total</span>
+                    <span id="roomTotal">R 0</span>
+                </div>
+                <div class="price-row">
+                    <span>Tourist Levy</span>
+                    <span>R 100</span>
+                </div>
+                <div class="price-row">
+                    <span>Visa Processing</span>
+                    <span id="visaFee">R 0</span>
+                </div>
+                <div class="price-row total">
+                    <span>Total Amount</span>
+                    <span id="totalAmount">R 0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Booking Form -->
+        <main class="booking-form-section animate-in" id="formSection">
+            <h2 class="section-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Guest Information
+            </h2>
+
+            <form id="bookingForm">
+                <!-- Personal Details -->
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Full Name *</label>
+                    <input type="text" class="form-input" id="fullName" name="fullName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="date-inputs">
+                    <div class="form-group">
+                        <label class="form-label" for="checkInDate">Check-in Date *</label>
+                        <input type="date" class="form-input" id="checkInDate" name="checkInDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="checkOutDate">Check-out Date *</label>
+                        <input type="date" class="form-input" id="checkOutDate" name="checkOutDate" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address *</label>
+                    <input type="email" class="form-input" id="email" name="email" required placeholder="your.email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number *</label>
+                    <input type="tel" class="form-input" id="phone" name="phone" required placeholder="+27 XX XXX XXXX">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="country">Country</label>
+                    <select class="form-input" id="country" name="country">
+                        <option value="South Africa">South Africa</option>
+                        <option value="Nigeria">Nigeria</option>
+                        <option value="Ghana">Ghana</option>
+                        <option value="Kenya">Kenya</option>
+                        <option value="Zimbabwe">Zimbabwe</option>
+                        <option value="Botswana">Botswana</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="United States">United States</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Room Selection - Using Native Select Element -->
+                <div class="form-group">
+                    <label class="form-label" for="roomSelect">Select Room Type *</label>
+                    <div class="room-select-wrapper">
+                        <select class="room-select" id="roomSelect" name="roomSelect" required>
+                            <option value="" disabled selected>-- Choose a room --</option>
+                            <option value="deluxe" data-price="2500" data-name="Deluxe Suite" data-features="King Bed,45 m²,City View,Free WiFi">Deluxe Suite - R 2,500 / night</option>
+                            <option value="executive" data-price="3800" data-name="Executive Suite" data-features="King Bed,60 m²,Work Desk,Lounge Area">Executive Suite - R 3,800 / night</option>
+                            <option value="presidential" data-price="8500" data-name="Presidential Suite" data-features="King Bed,120 m²,Jacuzzi,Butler Service">Presidential Suite - R 8,500 / night</option>
+                        </select>
+                        <div class="room-select-arrow">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Room Info Display -->
+                    <div class="room-info-card" id="roomInfoCard">
+                        <div class="room-info-name" id="roomInfoName"></div>
+                        <div class="room-info-features" id="roomInfoFeatures"></div>
+                        <div class="room-info-price" id="roomInfoPrice"></div>
+                    </div>
+                </div>
+                
+                <!-- Hidden inputs for room data -->
+                <input type="hidden" id="roomType" name="roomType">
+                <input type="hidden" id="roomName" name="roomName">
+                <input type="hidden" id="roomPrice" name="roomPrice">
+
+                <!-- Visa Upload Section -->
+                <div class="visa-section">
+                    <h3 class="section-title" style="font-size: 1.25rem; margin-bottom: 1rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                        </svg>
+                        Visa Documentation
+                    </h3>
+                    <p style="color: var(--muted-foreground); margin-bottom: 1rem; font-size: 0.875rem;">
+                        For International Guests: Upload your passport and visa documents. Our concierge will assist with any requirements.
+                        <br><strong style="color:var(--primary);">Fee: R 500 per document (max R 1,500)</strong>
+                    </p>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                        </div>
+                        <div class="upload-text">Click to upload visa documents</div>
+                        <div class="upload-hint">Supports PDF, JPG, PNG (Max 10MB each)</div>
+                    </div>
+                    
+                    <input type="file" id="visaUpload" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                    
+                    <div class="uploaded-files" id="uploadedFiles"></div>
+                </div>
+
+                <!-- Special Requests -->
+                <div class="requests-section">
+                    <h3 class="section-title" style="font-size: 1.25rem; margin-bottom: 1rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        Special Requests
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="specialRequests">Additional Requests</label>
+                        <textarea class="form-input" id="specialRequests" name="specialRequests" rows="4" placeholder="Any special requests, dietary requirements, or preferences..."></textarea>
+                    </div>
+                    
+                    <div class="request-options">
+                        <input type="checkbox" class="request-checkbox" id="reqEarlyCheckin" name="requests" value="Early Check-in">
+                        <label class="request-option" for="reqEarlyCheckin">
+                            <svg class="request-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span>Early Check-in</span>
+                        </label>
+                        
+                        <input type="checkbox" class="request-checkbox" id="reqLateCheckout" name="requests" value="Late Check-out">
+                        <label class="request-option" for="reqLateCheckout">
+                            <svg class="request-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span>Late Check-out</span>
+                        </label>
+                        
+                        <input type="checkbox" class="request-checkbox" id="reqAirportTransfer" name="requests" value="Airport Transfer">
+                        <label class="request-option" for="reqAirportTransfer">
+                            <svg class="request-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                            <span>Airport Transfer</span>
+                        </label>
+                        
+                        <input type="checkbox" class="request-checkbox" id="reqRomanticSetup" name="requests" value="Romantic Setup">
+                        <label class="request-option" for="reqRomanticSetup">
+                            <svg class="request-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span>Romantic Setup</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        Complete Booking
+                    </button>
+                    <div class="guarantee">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        Secure SSL Encryption - Best Rate Guaranteed
+                    </div>
+                </div>
+            </form>
+        </main>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+            </div>
+            <h2 class="success-title">Booking Confirmed!</h2>
+            <div class="success-ref">
+                <div class="success-ref-label">Your Booking Reference</div>
+                <div class="success-ref-value" id="bookingReference">MAB-XXXXXXXX</div>
+            </div>
+            <p class="success-text">
+                Thank you for choosing Mabon Suites! A confirmation email has been sent to your email address with full booking details and a PDF confirmation.
+            </p>
+            <p class="success-text" style="margin-top:1rem;">
+                Our concierge team will contact you within 24 hours to confirm your reservation.
+            </p>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Processing your booking...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // State
+        var selectedRoom = null;
+        var uploadedFiles = [];
+        var TOURIST_LEVY = 100;
+        var VISA_FEE_PER_FILE = 500;
+        var MAX_VISA_FEE = 1500;
+
+        // Room data
+        var ROOMS = {
+            'deluxe': { type: 'deluxe', name: 'Deluxe Suite', price: 2500, features: ['King Bed', '45 m²', 'City View', 'Free WiFi'] },
+            'executive': { type: 'executive', name: 'Executive Suite', price: 3800, features: ['King Bed', '60 m²', 'Work Desk', 'Lounge Area'] },
+            'presidential': { type: 'presidential', name: 'Presidential Suite', price: 8500, features: ['King Bed', '120 m²', 'Jacuzzi', 'Butler Service'] }
+        };
+
+        // Starfield Animation
+        var canvas = document.getElementById('starfield');
+        var ctx = canvas.getContext('2d');
+        var stars = [];
+
+        function initStarfield() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            stars = [];
+            var starCount = Math.floor((canvas.width * canvas.height) / 8000);
+            
+            for (var i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5 + 0.5,
+                    opacity: Math.random() * 0.5 + 0.3,
+                    twinkleSpeed: Math.random() * 0.02 + 0.01
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            var isDark = !document.documentElement.getAttribute('data-theme') || 
+                          document.documentElement.getAttribute('data-theme') === 'dark';
+            
+            if (!isDark) {
+                requestAnimationFrame(drawStars);
+                return;
+            }
+            
+            for (var i = 0; i < stars.length; i++) {
+                var star = stars[i];
+                star.opacity += star.twinkleSpeed;
+                if (star.opacity > 0.8 || star.opacity < 0.2) {
+                    star.twinkleSpeed = -star.twinkleSpeed;
+                }
+                
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(201, 169, 98, ' + star.opacity + ')';
+                ctx.fill();
+            }
+            
+            requestAnimationFrame(drawStars);
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            var html = document.documentElement;
+            var currentTheme = html.getAttribute('data-theme');
+            var newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            try { localStorage.setItem('theme', newTheme); } catch(e) {}
+            
+            var sunIcon = document.getElementById('sunIcon');
+            var moonIcon = document.getElementById('moonIcon');
+            
+            if (newTheme === 'light') {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+
+        function loadTheme() {
+            var savedTheme = 'dark';
+            try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch(e) {}
+            
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            var sunIcon = document.getElementById('sunIcon');
+            var moonIcon = document.getElementById('moonIcon');
+            
+            if (savedTheme === 'light') {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+
+        // Date Calculations
+        function calculateNights(checkIn, checkOut) {
+            var checkInDate = new Date(checkIn);
+            var checkOutDate = new Date(checkOut);
+            var timeDiff = checkOutDate - checkInDate;
+            return Math.max(0, Math.floor(timeDiff / (1000 * 60 * 60 * 24)));
+        }
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            var options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('en-GB', options);
+        }
+
+        function updateStayDisplay() {
+            var checkIn = document.getElementById('checkInDate').value;
+            var checkOut = document.getElementById('checkOutDate').value;
+            
+            if (!checkIn || !checkOut) return;
+            
+            var nights = calculateNights(checkIn, checkOut);
+            
+            if (nights < 0) {
+                document.getElementById('durationDisplay').textContent = 'Invalid Dates';
+            } else {
+                document.getElementById('durationDisplay').textContent = nights + ' Night' + (nights !== 1 ? 's' : '');
+                document.getElementById('nightsCount').textContent = nights;
+                document.getElementById('checkInDisplay').textContent = formatDate(checkIn);
+                document.getElementById('checkOutDisplay').textContent = formatDate(checkOut);
+                updatePrice();
+            }
+        }
+
+        // Room Selection - Using native select element
+        function handleRoomSelection() {
+            var select = document.getElementById('roomSelect');
+            var selectedOption = select.options[select.selectedIndex];
+            
+            if (!selectedOption || !selectedOption.value) {
+                selectedRoom = null;
+                document.getElementById('roomInfoCard').classList.remove('visible');
+                document.getElementById('selectedRoomDisplay').textContent = 'Not Selected';
+                document.getElementById('roomRate').textContent = 'R 0';
+                document.getElementById('roomFeaturesDisplay').innerHTML = '';
+                document.getElementById('roomType').value = '';
+                document.getElementById('roomName').value = '';
+                document.getElementById('roomPrice').value = '';
+                updatePrice();
+                return;
+            }
+            
+            var roomType = selectedOption.value;
+            var room = ROOMS[roomType];
+            
+            if (!room) return;
+            
+            selectedRoom = room;
+            
+            // Update hidden fields
+            document.getElementById('roomType').value = room.type;
+            document.getElementById('roomName').value = room.name;
+            document.getElementById('roomPrice').value = room.price;
+            
+            // Update room info card
+            document.getElementById('roomInfoName').textContent = room.name;
+            document.getElementById('roomInfoPrice').innerHTML = 'R ' + room.price.toLocaleString() + ' <span>/ night</span>';
+            
+            var featuresHtml = '';
+            for (var i = 0; i < room.features.length; i++) {
+                featuresHtml += '<span class="room-info-feature">' + room.features[i] + '</span>';
+            }
+            document.getElementById('roomInfoFeatures').innerHTML = featuresHtml;
+            document.getElementById('roomInfoCard').classList.add('visible');
+            
+            // Update summary
+            document.getElementById('selectedRoomDisplay').textContent = room.name;
+            document.getElementById('roomRate').textContent = 'R ' + room.price.toLocaleString();
+            
+            var summaryFeaturesHtml = '';
+            for (var j = 0; j < room.features.length; j++) {
+                summaryFeaturesHtml += '<span style="display:inline-block;background:var(--secondary);color:var(--muted-foreground);padding:0.25rem 0.5rem;border-radius:4px;margin:0.25rem 0.25rem 0 0;font-size:0.75rem;">' + room.features[j] + '</span>';
+            }
+            document.getElementById('roomFeaturesDisplay').innerHTML = summaryFeaturesHtml;
+            
+            updatePrice();
+        }
+
+        // File Upload
+        function handleFileUpload(files) {
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                
+                if (file.size > 10 * 1024 * 1024) {
+                    toast('File ' + file.name + ' is too large. Maximum size is 10MB.', 'error');
+                    continue;
+                }
+                
+                if (uploadedFiles.length >= 3) {
+                    toast('Maximum 3 files allowed.', 'error');
+                    break;
+                }
+                
+                uploadedFiles.push(file);
+            }
+            renderUploadedFiles();
+            updatePrice();
+        }
+
+        function renderUploadedFiles() {
+            var container = document.getElementById('uploadedFiles');
+            var html = '';
+            
+            for (var i = 0; i < uploadedFiles.length; i++) {
+                html += '<div class="file-item">' +
+                    '<div class="file-info">' +
+                        '<div class="file-icon">' +
+                            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+                                '<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>' +
+                                '<polyline points="13 2 13 9 20 9"/>' +
+                            '</svg>' +
+                        '</div>' +
+                        '<span>' + uploadedFiles[i].name + '</span>' +
+                    '</div>' +
+                    '<button type="button" class="remove-file" onclick="removeFile(' + i + ')">' +
+                        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+                            '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' +
+                        '</svg>' +
+                    '</button>' +
+                '</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function removeFile(idx) {
+            uploadedFiles.splice(idx, 1);
+            renderUploadedFiles();
+            updatePrice();
+        }
+
+        // Price Calculation
+        function updatePrice() {
+            if (!selectedRoom) return;
+            
+            var checkIn = document.getElementById('checkInDate').value;
+            var checkOut = document.getElementById('checkOutDate').value;
+            
+            if (!checkIn || !checkOut) return;
+            
+            var nights = calculateNights(checkIn, checkOut);
+            var roomCost = selectedRoom.price * nights;
+            var visaFee = Math.min(uploadedFiles.length * VISA_FEE_PER_FILE, MAX_VISA_FEE);
+            var total = roomCost + visaFee + TOURIST_LEVY;
+            
+            document.getElementById('roomTotal').textContent = 'R ' + roomCost.toLocaleString();
+            document.getElementById('visaFee').textContent = 'R ' + visaFee.toLocaleString();
+            document.getElementById('totalAmount').textContent = 'R ' + total.toLocaleString();
+        }
+
+        // Toast Notifications
+        function toast(message, type) {
+            type = type || 'info';
+            var container = document.getElementById('toastContainer');
+            var toastEl = document.createElement('div');
+            toastEl.className = 'toast ' + type;
+            toastEl.textContent = message;
+            container.appendChild(toastEl);
+            
+            setTimeout(function() { toastEl.remove(); }, 5000);
+        }
+
+        // File to Base64
+        function fileToBase64(file) {
+            return new Promise(function(resolve, reject) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function() {
+                    var base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = function(error) { reject(error); };
+            });
+        }
+
+        // Get selected special requests
+        function getSelectedRequests() {
+            var checkboxes = document.querySelectorAll('.request-checkbox:checked');
+            var requests = [];
+            for (var i = 0; i < checkboxes.length; i++) {
+                requests.push(checkboxes[i].value);
+            }
+            return requests;
+        }
+
+        // Form Submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            if (!selectedRoom) {
+                toast('Please select a room type', 'error');
+                return;
+            }
+            
+            var checkIn = document.getElementById('checkInDate').value;
+            var checkOut = document.getElementById('checkOutDate').value;
+            var nights = calculateNights(checkIn, checkOut);
+            
+            if (nights <= 0) {
+                toast('Please select valid dates', 'error');
+                return;
+            }
+            
+            var selectedRequests = getSelectedRequests();
+            
+            var formData = {
+                guestName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                country: document.getElementById('country').value,
+                checkInDate: checkIn,
+                checkOutDate: checkOut,
+                nights: nights,
+                roomType: selectedRoom.type,
+                roomName: selectedRoom.name,
+                roomRate: selectedRoom.price,
+                specialRequests: document.getElementById('specialRequests').value,
+                requestOptions: JSON.stringify(selectedRequests),
+                visaRequired: uploadedFiles.length > 0,
+                visaFileCount: uploadedFiles.length
+            };
+            
+            // Show loading
+            document.getElementById('loadingOverlay').classList.add('show');
+            document.getElementById('submitBtn').disabled = true;
+            
+            // Process files if any
+            if (uploadedFiles.length > 0) {
+                processFilesAndSubmit(formData);
+            } else {
+                submitFormData(formData);
+            }
+        }
+
+        function processFilesAndSubmit(formData) {
+            var promises = [];
+            
+            for (var i = 0; i < uploadedFiles.length && i < 3; i++) {
+                (function(index) {
+                    var file = uploadedFiles[index];
+                    promises.push(
+                        fileToBase64(file).then(function(base64) {
+                            formData['visaFile' + (index + 1)] = {
+                                name: file.name,
+                                type: file.type,
+                                data: base64
+                            };
+                        })
+                    );
+                })(i);
+            }
+            
+            Promise.all(promises).then(function() {
+                submitFormData(formData);
+            }).catch(function(error) {
+                handleError(error);
+            });
+        }
+
+        function submitFormData(formData) {
+            google.script.run
+                .withSuccessHandler(handleSuccess)
+                .withFailureHandler(handleError)
+                .processFormSubmission(formData);
+        }
+
+        function handleSuccess(result) {
+            document.getElementById('loadingOverlay').classList.remove('show');
+            
+            if (result.success) {
+                document.getElementById('bookingReference').textContent = result.reference;
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('bookingSummary').style.display = 'none';
+                document.getElementById('successMessage').classList.add('show');
+                toast('Booking confirmed! Check your email for confirmation.', 'success');
+            } else {
+                toast(result.error || 'Failed to process booking', 'error');
+                document.getElementById('submitBtn').disabled = false;
+            }
+        }
+
+        function handleError(error) {
+            document.getElementById('loadingOverlay').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+            toast(error.message || 'An error occurred. Please try again.', 'error');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initStarfield();
+            drawStars();
+            window.addEventListener('resize', initStarfield);
+            
+            loadTheme();
+            
+            // Set minimum date to today
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkInDate').min = today;
+            document.getElementById('checkOutDate').min = today;
+            
+            // Set default dates
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            var dayAfter = new Date();
+            dayAfter.setDate(dayAfter.getDate() + 2);
+            
+            document.getElementById('checkInDate').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('checkOutDate').value = dayAfter.toISOString().split('T')[0];
+            
+            updateStayDisplay();
+            
+            // Event Listeners
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            document.getElementById('checkInDate').addEventListener('change', function() {
+                var checkInDate = new Date(this.value);
+                var minCheckOut = new Date(checkInDate);
+                minCheckOut.setDate(minCheckOut.getDate() + 1);
+                document.getElementById('checkOutDate').min = minCheckOut.toISOString().split('T')[0];
+                
+                var currentCheckOut = new Date(document.getElementById('checkOutDate').value);
+                if (currentCheckOut <= checkInDate) {
+                    document.getElementById('checkOutDate').value = minCheckOut.toISOString().split('T')[0];
+                }
+                
+                updateStayDisplay();
+            });
+            
+            document.getElementById('checkOutDate').addEventListener('change', updateStayDisplay);
+            
+            // Room selection - native select
+            document.getElementById('roomSelect').addEventListener('change', handleRoomSelection);
+            
+            // File upload
+            var uploadArea = document.getElementById('uploadArea');
+            var fileInput = document.getElementById('visaUpload');
+            
+            uploadArea.addEventListener('click', function() { fileInput.click(); });
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--primary)';
+                uploadArea.style.background = 'rgba(201, 169, 98, 0.05)';
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.style.borderColor = 'var(--border)';
+                uploadArea.style.background = '';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--border)';
+                uploadArea.style.background = '';
+                handleFileUpload(e.dataTransfer.files);
+            });
+            
+            fileInput.addEventListener('change', function(e) { handleFileUpload(e.target.files); });
+            
+            document.getElementById('bookingForm').addEventListener('submit', handleSubmit);
+        });
+    </script>
+</body>
+</html>
